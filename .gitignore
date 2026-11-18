@@ -1,0 +1,13 @@
+# 操作系统与编辑器缓存
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.log
+*.tmp
+node_modules/
+
+# 下载的运行结果和个人报告可放此处，不随源码提交
+local-results/
+personal-report/

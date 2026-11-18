@@ -1,0 +1,6 @@
+int count = 1;
+real count = 2.5;
+const bool READY = true;
+char READY = 'Y';
+int next = 2;
+*

@@ -1,0 +1,7 @@
+int missing = 1
+int afterMissing = 2;
+const int BAD = 0xGG;
+bool good = true;
+char tooLong = 'AB';
+int last = 3;
+*

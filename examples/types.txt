@@ -1,0 +1,6 @@
+int score = 9.5;
+bool ready = 1;
+char code = true;
+int overflow = 2147483648;
+real valid = 12;
+*

@@ -1,0 +1,5 @@
+const int LIMIT = -128;
+const real PI = 3.14159;
+const char NEWLINE = '\n';
+const bool ACTIVE = true;
+*

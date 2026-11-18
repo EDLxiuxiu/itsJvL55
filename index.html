@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="编译原理实验三：本地运行的常量与变量声明分析系统。">
+  <title>声明分析工作台 · 编译原理实验三</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/analyzer.js"></script>
+  <script defer src="js/examples.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="声明分析工作台首页"><span class="brand-icon">{;}</span><span>DECLARATION LAB<span class="brand-sub">编译原理 · 综合实验</span></span></a>
+    <div class="topbar-right"><span class="local-badge"><i></i> 本地运行 · 无需联网</span><button id="help-button" class="button subtle" type="button">语法说明 ↗</button></div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">COMPILER PRINCIPLES / LAB 03</p><h1>常量与变量声明分析</h1><p class="intro-description">从一条声明，观察词法识别、类型检查与存储分配的完整过程。</p></div>
+      <div class="pipeline" aria-label="分析流程"><span>01 词法识别</span><b>→</b><span>02 声明检查</span><b>→</b><span>03 符号登记</span></div>
+    </section>
+    <div class="workspace">
+      <section class="panel editor-panel" aria-labelledby="editor-title">
+        <div class="panel-heading"><h2 id="editor-title"><span class="section-number">01</span> 输入声明</h2><span class="small-tag">SOURCE</span></div>
+        <div class="example-toolbar"><label for="example-select">内置示例</label><select id="example-select"></select><button id="load-example" class="button secondary" type="button">载入</button></div>
+        <p id="example-description" class="example-description"></p>
+        <div class="editor-wrap"><div id="line-numbers" class="line-numbers" aria-hidden="true">1</div><textarea id="source" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="声明源代码" wrap="off"></textarea></div>
+        <div class="editor-footer"><span id="editor-info">1 行 · UTF-8</span><span>Ctrl / ⌘ + Enter 分析</span></div>
+        <div class="actions"><button id="analyze" class="button primary" type="button">开始分析 <span>→</span></button><button id="import-button" class="button secondary" type="button">导入文本</button><button id="clear" class="button subtle" type="button">清空</button><input id="file-input" type="file" accept=".txt,.decl,.c,text/plain" hidden></div>
+        <div class="syntax-note"><strong>书写提示</strong><p>常量：<code>const int MAX = 100;</code><br>变量：<code>real price = 19.5;</code><br>每条声明以 <code>;</code> 结尾，最后单独一行输入 <code>*</code>。</p></div>
+      </section>
+      <section class="results-column" aria-label="分析结果">
+        <div class="result-heading"><h2><span class="section-number">02</span> 分析结果</h2><span id="status" class="status" role="status" aria-live="polite">等待分析</span></div>
+        <div class="metrics"><div class="metric"><span>常量</span><strong id="constant-count">—</strong><small>CONSTANTS</small></div><div class="metric"><span>变量</span><strong id="variable-count">—</strong><small>VARIABLES</small></div><div class="metric"><span>模拟空间</span><strong id="byte-count">—</strong><small>BYTES</small></div><div class="metric"><span>错误</span><strong id="error-count">—</strong><small>DIAGNOSTICS</small></div></div>
+        <section class="panel result-panel">
+          <div class="tabs" role="tablist" aria-label="结果类别">
+            <button id="tab-symbols" class="tab active" role="tab" aria-selected="true" aria-controls="result-content" data-view="symbols" type="button">符号表</button>
+            <button id="tab-constants" class="tab" role="tab" aria-selected="false" aria-controls="result-content" data-view="constants" type="button">常量表</button>
+            <button id="tab-variables" class="tab" role="tab" aria-selected="false" aria-controls="result-content" data-view="variables" type="button">变量表</button>
+            <button id="tab-tokens" class="tab" role="tab" aria-selected="false" aria-controls="result-content" data-view="tokens" type="button">Token</button>
+            <button id="tab-diagnostics" class="tab" role="tab" aria-selected="false" aria-controls="result-content" data-view="diagnostics" type="button">错误信息</button>
+            <button id="tab-trace" class="tab" role="tab" aria-selected="false" aria-controls="result-content" data-view="trace" type="button">处理过程</button>
+          </div>
+          <p id="result-caption" class="result-caption"></p><div id="result-content" class="table-wrap" role="tabpanel" aria-labelledby="tab-symbols" tabindex="0"></div>
+          <div class="result-footer"><span id="result-summary">尚未分析</span><button id="export-json" class="button subtle" type="button" disabled>导出 JSON ↓</button></div>
+        </section>
+        <div class="storage-note"><span class="note-icon">i</span><p><strong>模拟存储模型</strong><br><code>int 4B</code> · <code>real 8B</code> · <code>char 4B</code> · <code>bool 1B</code>。从地址 0 连续分配，不做对齐；常量仅登记值，不占变量空间。</p></div>
+        <div class="export-actions"><button id="export-source" class="button secondary" type="button">保存输入 .txt</button><button id="export-markdown" class="button secondary" type="button" disabled>导出分析摘要 .md</button><span id="notice" role="status" aria-live="polite"></span></div>
+      </section>
+    </div>
+    <footer class="page-footer"><span>简单语言的常量与变量声明分析系统</span><span>原生 HTML / CSS / JavaScript · 单作用域</span></footer>
+  </main>
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title">这门简单语言如何书写</h2><button id="close-help" class="button subtle" type="button" aria-label="关闭语法说明">关闭 ×</button></div><div class="help-body">
+    <p>类型关键字为 <code>int</code>、<code>real</code>、<code>char</code>、<code>bool</code>，区分大小写。名字可含英文字母、数字和下划线，不能以数字开头，也不能使用关键字。</p>
+    <pre>const int LIMIT = 100;
+const char NEWLINE = '\n';
+real price = 12.5;
+bool finished;
+*</pre>
+    <ul><li>常量必须有初值；变量初值可省略，省略时显示“未初始化”。</li><li>整数支持十进制、0x/0X 十六进制；int 限定为 32 位有符号整数。</li><li>实数必须有小数点，可带指数，例如 12.、0.5、1.2e+3。real 也可接收整数字面量。</li><li>char 用英文单引号包围一个 Unicode 字符，支持 \n、\r、\t、\0、\'、\&quot;、\\。</li><li>bool 初值只能为 true 或 false。数值可带一个正负号。</li><li>支持 // 单行注释和 /* */ 多行注释，不支持注释嵌套。</li><li>* 必须单独占一行；之后只能有空白或合法注释。</li><li>不支持表达式、名字引用、多变量声明、数组、函数或嵌套作用域。</li><li>错误声明不登记、不占空间；尽量在分号或下一行声明开头恢复分析。</li></ul>
+    <p class="help-footnote">这是自行定义的教学语言，并非完整 C 语言。地址是模拟偏移量，char 的 4 字节是本系统为单个 Unicode 码点规定的教学存储模型。</p>
+  </div></dialog>
+</body>
+</html>

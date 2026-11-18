@@ -1,0 +1,5 @@
+int counter;
+real average = 12.5;
+char label = 'A';
+bool finished = false;
+*
